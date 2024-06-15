@@ -2,7 +2,7 @@
 
 // sprawdzam czy wprowadzone dane sa liczbami, jesli nie to zwracam blad
 
-int	check_arg_isnumber(char *arg)
+int	ft_isnumber(char *arg)
 {
 	int x;
 
@@ -23,15 +23,15 @@ int	check_arg_isnumber(char *arg)
 
 int	check_valid_args(char *argv[])
 {
-	if(ft_atol(argv[1]) > PHILO_MAX || ft_atol(argv[1]) <= 0 || check_arg_content(argv[1]) == 1) // sprawdza czy ilosc filozofow jesy OK
+	if(ft_atol(argv[1]) > PHILO_MAX || ft_atol(argv[1]) <= 0 || ft_isnumber(argv[1]) == 1) // sprawdza czy ilosc filozofow jesy OK
 		return(write(2, "Invalid philosophers number\n", 29), 1);
-	if(ft_atol(argv[2]) <= 0 || check_arg_isnumber(argv[2]) == 1)
+	if(ft_atol(argv[2]) <= 0 || ft_isnumber(argv[2]) == 1)
 		return(write(2, "Invalid time to die\n", 21), 1);
-	if(ft_atol(argv[3]) <= 0 || check_arg_isnumber(argv[3]) == 1)
+	if(ft_atol(argv[3]) <= 0 || ft_isnumber(argv[3]) == 1)
 		return(write(2, "Invalid time to eat\n", 21), 1);
-	if(ft_atol(argv[4]) <= 0 || check_arg_isnumber(argv[4]) == 1)
+	if(ft_atol(argv[4]) <= 0 || ft_isnumber(argv[4]) == 1)
 		return(write(2, "Invalid time to sleep\n", 23), 1);
-	if(argv[5] && (ft_atol(argv[5]) < 0 || check_arg_isnumber(argv[5]) == 1))
+	if(argv[5] && (ft_atol(argv[5]) < 0 || ft_isnumber(argv[5]) == 1))
 		return(write(2, "Invalid numbers of times each philosopher must eat\n", 51), 1);
 	return(0);
 }
@@ -43,15 +43,22 @@ int	check_valid_args(char *argv[])
 // 200 - czas jaki potrzebuje filozof do zjedzenia
 // 200 - czas jaki potrzebuje filozof do snu
 // 7 - ilosc posilkow, jakie wszyscy filozofowie musza zjesc przed zakonczeniem programu (* argument opcjonalny)
+// !!! CZAS PODAWANY JEST W MILISEKUNDACH !!! (1 sekunda = 1000 milisekund = 1000000 mikrosekund)
 
 int main(int argc, char *argv[])
 {
 	t_program		program;
 	t_philo			philos[PHILO_MAX];
-	pthread_mutez_t	forks[PHILO_MAX];
+	pthread_mutex_t	forks[PHILO_MAX];
 
 	if(argc != 5 && argc != 6) // jesli liczba argumentow nie jest rowna ani 5 ani 6...
 		return(write(2, "Wrong argument count\n", 22), 1); // ... to wypisuje komunikat bledu (2 odpowiada standardowemu wyjsciu bledu) i koncze program z wartoscia 1 ( return(1) )
 	if(check_valid_args(argv) == 1) // jesli funkcja zwraca 1 oznacza to ze podane argumenty wejsciowe sa nieprawidlowe.
 		return(1); // wiec zwracam 1, bo jest to standardowy kod bledu
+	init_program(&program, philos);
+	init_forks(forks, ft_atol(argv[1]));
+	init_philos(philos, &program, forks, argv);
+	thread_create(&program, forks);
+	destroy_all(NULL, &program, forks); // NULL, bo nie mam zadnego komunikatu, ktory chce wyswietlic. A nie wyswietlam komunikatu, bo "niszcze" wszystko NIE z powodu bledu.
+	return(0);
 }
