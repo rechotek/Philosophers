@@ -14,6 +14,8 @@ void    print_message(char *str, t_philo *philo, int id) // Przyjmuje wiadomosc 
 }
 
 // Sprawdza czy dany filozof jest martwy (czyli czy zakonczyl wykonywanie zadania)
+// Zwraca 1 jesli filozof jest martwy (prawda)
+// Zwraca 0 jesli filozof zyje (falsz)
 
 int	philo_dead(t_philo *philo, size_t time_to_die)
 {
