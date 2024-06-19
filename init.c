@@ -14,7 +14,7 @@ void	init_input(t_philo *philo, char *argv[])
 	if(argv[5])
 		philo->num_times_to_eat = ft_atol(argv[5]);
 	else
-		philo->num_times_to_eat = -1;
+		philo->num_times_to_eat = -1; // -1 oznacza blad, a jest blad poniewaz nie ma 5 argumentu (argv[5])
 }
 
 // Inicjalizuje tablice filozofow przypisujac odpiwednie wartosci ich polom

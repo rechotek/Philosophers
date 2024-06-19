@@ -28,3 +28,59 @@ int	philo_dead(t_philo *philo, size_t time_to_die)
 	pthread_mutex_unlock(philo->meal_lock);
 	return(0);
 }
+
+// Sprawdza czy ktorykolwiek z filozofow umarl z glodu.
+// Jesli znajdzie martwego filozofa to drukuje odpowiedni komunikat,
+// ustawia flage "dead" na 1 i zwraca 1
+// Jesli zaden filozof nie umarl to funkcja zwraca 0.
+
+int	check_if_any_dead(t_philo *philos)
+{
+	int	x;
+
+	x = 0;
+	while(x < philos[0].num_of_philos) // petla iterujaca przez wszystkich filozofow
+	{
+		if(philo_dead(&philos[x], philos[x].time_to_die)) // sprawdzamc zy umarl, jesli tak to wchodzimy w "ifa"
+		{
+			print_message("died", &philos[x], philos[x].id);
+			pthread_mutex_lock(philos[0].dead_lock); // blokujemy mutex ...
+			*philos->dead = 1; // ... ustawiamy flage na 1 ...
+			pthread_mutex_unlock(philos[0].dead_lock); // ... odblokowujemy mutex
+			return(1);
+		}
+		x++;
+	}
+	return(0);
+}
+
+// Funkcja sprawdza czy wszyscy filozofowie zjedli wymagana ilosc posilkow.
+// Jesli tak to ustawia flage "dead" na 1 i zwraca 1.
+// Jesli nie to po prostu zwraca 0.
+
+int	check_if_all_ate(t_philo *philos)
+{
+	int	x;
+	int	finished_eating; // argument liczacy filozofow ktorzy zjedli wymagana ilosc posilkow
+
+	x = 0;
+	finished_eating = 0;
+	if(philos[0].num_times_to_eat == -1) // oznacza ze nie ma ograniczenia co do liczby posilkow, wiec zwraca 0.
+		return(0);
+	while(x < philos[0].num_of_philos) // petla przechodzaca przez wszystkich filozofow
+	{
+		pthread_mutex_lock(philos[x].meal_lock);
+		if(philos[x].meals_eaten >= philos[x].num_times_to_eat) // jesli ilosc zjedzonych posilkow jest wieksza rowna od wymaganej ilosci posilkow do zjedzenia...
+			finished_eating++; // ... to inkrementujemy finished_eating, ktory liczy filozofow, ktorzy zjedli wyamagana ilosc posilkow
+		pthread_mutex_unlock(philos[x].meal_lock);
+		x++;
+	}
+	if(finished_eating == philos[0].num_of_philos) // jezeli ilosc filozofow ktorzy zjedli rowna sie calkowitej liczbie filozofow
+	{
+		pthread_mutex_lock(philos[0].dead_lock);
+		*philos->dead = 1; // to ustawiam flage "dead" na 1
+		pthread_mutex_unlock(philos[0].dead_lock);
+		return(1);
+	}
+	return(0);
+}
