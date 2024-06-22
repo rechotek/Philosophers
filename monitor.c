@@ -20,7 +20,7 @@ void    print_message(char *str, t_philo *philo, int id) // Przyjmuje wiadomosc 
 int	philo_dead(t_philo *philo, size_t time_to_die)
 {
 	pthread_mutex_lock(philo->meal_lock); // blokuje mutex "meal_lock", ktory zapewnia ze tylko jeden watek na raz bedzie mogl miec dostep do sekcji krytycznej, czyli do "last_meal" i "eating" w strukturze "philo"
-	if((get_current_time() - philo->last_meal >= time_to_die) && philo->eating == 0) // jezeli czas od ostatniego posilku (get_current_time() - philo->last_meal) jest dluzszy od maksymalnego czasu jaki moze przezyc filozof bez posilku (time_to_die)
+	if((get_current_time() - philo->last_meal >= time_to_die) && philo->eating == 0) // jezeli czas od ostatniego posilku (get_current_time() - philo->last_meal) jest dluzszy od maksymalnego czasu jaki moze przezyc filozof bez posilku (time_to_die) i jesli filozof akurat nie je
 	{
 		pthread_mutex_unlock(philo->meal_lock);
 		return(1);
@@ -41,7 +41,7 @@ int	check_if_any_dead(t_philo *philos)
 	x = 0;
 	while(x < philos[0].num_of_philos) // petla iterujaca przez wszystkich filozofow
 	{
-		if(philo_dead(&philos[x], philos[x].time_to_die)) // sprawdzamc zy umarl, jesli tak to wchodzimy w "ifa"
+		if(philo_dead(&philos[x], philos[x].time_to_die)) // sprawdzam czy umarl, jesli tak to wchodzimy w "ifa"
 		{
 			print_message("died", &philos[x], philos[x].id);
 			pthread_mutex_lock(philos[0].dead_lock); // blokujemy mutex ...
@@ -83,4 +83,21 @@ int	check_if_all_ate(t_philo *philos)
 		return(1);
 	}
 	return(0);
+}
+
+// Funkcja monitoruje stan filozofow w czasie rzeczywistym. W nieskonczonej petli sprawdza 2 warunki:
+// czy ktorys z filozofow umarl oraz czy wszyscy filozofowie zjedli. Jesli ktorys z tych warunkow
+// zostanie spelniony, to petla sie konczy, a funkcja zwraca wskaznik, ktory jej przekazano.
+
+void	*monitor(void *pointer)
+{
+	t_philo	*philos;
+
+	philos = (t_philo *)pointer; // "pointer" jest castowany na "t_philo *" i przypisywany do zmienne "philos"
+	while(1) // to jest nieskonczona petla, ktora wykonuje sie dopoki nie zostanie spelniony ktorys warunek z ifa
+	{
+		if(check_if_any_dead(philos) == 1 || check_if_all_ate(philos) == 1) // sprawdzamy czy ktorys z filozofow umarl lub czy wszyscy zjedli; 1 oznacza prawde, czyli spelniony warunek
+			break ; // jesli ktorys z powyzszych warunkow jest spelniony to przerywamy dzialanie petli i wychodzimy z niej
+	}
+	return(pointer); // zwracamy pointer
 }
