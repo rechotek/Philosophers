@@ -21,7 +21,7 @@ void	eat(t_philo *philo)
 		pthread_mutex_unlock(philo->r_fork); // odblokowuje mutex, ktory wczesniej zablokowalem
 		return ; // koncze dzialanie funkcji
 	}
-	pthread_mutex_lock(philo->l_fork); // filozof probuje podniesc lewy widelec blokujac odpowiedni mutex
+	pthread_mutex_lock(philo->l_fork); // filozof probuje podniesc lewy widelec blokujac odpowiedni mutex; jesli nie moze tego zrobic to czeka w kolejce
 	print_message("Has taken a left fork", philo, philo->id); // drukuje komunikat ze wzial widelec
 	philo->eating = 1; // zmienna "eating" jest ustawiana na 1, czyli, ze filozof je
 	print_message("Is eating", philo, philo->id); // drukuje komunikat ze filozof je

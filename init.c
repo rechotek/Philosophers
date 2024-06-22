@@ -18,6 +18,8 @@ void	init_input(t_philo *philo, char *argv[])
 }
 
 // Inicjalizuje tablice filozofow przypisujac odpiwednie wartosci ich polom
+// philos[x] - x oznacza miejsce w tablicy filozofow, czyli konkretnego filozofa
+// forks[x] - x oznacza konkretny widelec; kazdy filozof ma inny lewy i prawy widelec, ale "nakladaja" sie one na siebie (patrz obrazek w swoim pliku)
 
 void	init_philos(t_philo *philos, t_program *program, pthread_mutex_t *forks, char *argv[])
 {
@@ -45,7 +47,7 @@ void	init_philos(t_philo *philos, t_program *program, pthread_mutex_t *forks, ch
 	}
 }
 
-// Do inicjalizacji tablicy muteksów, które reprezentują widelce w problemie "filozofów przy stole".
+// Sluzy do inicjalizacji tablicy muteksów, które reprezentują widelce w problemie "filozofów przy stole".
 // Każdy filozof musi mieć dostęp do dwóch widelców (muteksów), aby móc jeść. Inicjalizacja muteksów
 // zapewnia, że będą one gotowe do użycia w programie wielowątkowym.
 
@@ -56,7 +58,7 @@ void	init_forks(pthread_mutex_t *forks, int philo_num) // pthread_mutex_t *forks
 	x = 0;
 	while(x < philo_num)
 	{
-		pthread_mutex_init(&forks[x], NULL);
+		pthread_mutex_init(&forks[x], NULL); // "&forks[x]" wskaznik do biezacego elementu tablicy mutexow z widelcami
 		x++;
 	}
 }
@@ -68,9 +70,9 @@ void	init_forks(pthread_mutex_t *forks, int philo_num) // pthread_mutex_t *forks
 
 void    init_program(t_program *program, t_philo *philos)
 {
-    program->dead_flag = 0;
-    program->philos = philos;
-    pthread_mutex_init(&program->write_lock, NULL);
+    program->dead_flag = 0; // ustawiam na 0 czyli ze zaden filozof poki co nie umarl
+    program->philos = philos; // "program->philos" to wskaźnik w strukturze "t_program", który teraz będzie wskazywał na tablicę filozofów "philos"; dzięki temu, struktura "program" przechowuje referencję do tablicy filozofów, co pozwala na łatwy dostęp do niej w innych częściach programu. Można teraz uzyskać dostęp do filozofów przez "program->philos"
+    pthread_mutex_init(&program->write_lock, NULL); // inicjalizacja mutexow (niezbedna aby je wywolac)
     pthread_mutex_init(&program->dead_lock, NULL);
     pthread_mutex_init(&program->meal_lock, NULL);
 }
