@@ -60,6 +60,8 @@ void	destroy_all(char *str, t_program *program, pthread_mutex_t *forks)
 }
 
 // Ta funkcja zatrzymuje dzialanie danego procesu na okreslona ilosc czasu
+// Wykorzystuje ta funkcje, a nie bezposrednio "usleep" poniewaz taki sposob
+// zapewnia dokladniejsze opoznienie czasowe, ktore jest krytyczne przy zarzadaniu watkami
 
 int	ft_usleep(size_t miliseconds)
 {

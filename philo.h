@@ -38,6 +38,26 @@ typedef struct s_program
 	t_philo			*philos; // przechowuje wszystkich filozofow w tablicy
 }   t_program;
 
-// miejsce na funkcje
+// INIT
+void    init_program(t_program *program, t_philo *philos);
+void	init_forks(pthread_mutex_t *forks, int philo_num);
+void	init_philos(t_philo *philos, t_program *program, pthread_mutex_t *forks, char *argv[]);
+
+// THREADS
+int		thread_create(t_program *program, pthread_mutex_t *forks);
+
+// ROUTINE
+void	eat(t_philo *philo);
+void	dream(t_philo *philo);
+void    think(t_philo *philo);
+
+// MONITOR
+int		dead_loop(t_philo *philo);
+
+// UTILS
+int		ft_atol(char *str);
+void	destroy_all(char *str, t_program *program, pthread_mutex_t *forks);
+int		ft_usleep(size_t miliseconds);
+size_t	get_current_time(void);
 
 #endif
