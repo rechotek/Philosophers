@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mrechuli <mrechuli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/24 18:40:41 by mrechuli          #+#    #+#             */
+/*   Updated: 2024/06/24 18:40:43 by mrechuli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 # include <pthread.h>
@@ -6,7 +18,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define PHILO_MAX 200;
+# define PHILO_MAX 200
 
 typedef struct s_philo
 {
@@ -53,11 +65,13 @@ void    think(t_philo *philo);
 
 // MONITOR
 int		dead_loop(t_philo *philo);
+void	*monitor(void *pointer);
 
 // UTILS
 int		ft_atol(char *str);
 void	destroy_all(char *str, t_program *program, pthread_mutex_t *forks);
 int		ft_usleep(size_t miliseconds);
 size_t	get_current_time(void);
+void    print_message(char *str, t_philo *philo, int id);
 
 #endif

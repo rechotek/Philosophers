@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mrechuli <mrechuli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/24 18:41:00 by mrechuli          #+#    #+#             */
+/*   Updated: 2024/06/24 18:41:06 by mrechuli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	ft_atol(char *str)
@@ -86,7 +98,7 @@ size_t	get_current_time(void)
 {
 	struct timeval	time; // deklaracja struktury o nazwie time
 
-	gettimeofday(&time, NULL) // standardowa funkcja. Pobiera biezacy czas i zapisuje go w strukturze "time" (pierwszy argument); drugi argument jest opcjonalnym wskaznikiem do strefy czasowej (nie uzywam go tutaj)
+	gettimeofday(&time, NULL); // standardowa funkcja. Pobiera biezacy czas i zapisuje go w strukturze "time" (pierwszy argument); drugi argument jest opcjonalnym wskaznikiem do strefy czasowej (nie uzywam go tutaj)
 	if(gettimeofday(&time, NULL) == -1) // jesli funkcja zwroci -1 to znaczy ze to blad, wiec...
 		write(2, "gettimeofday() error\n", 22); // ... wypisuje blad
 	return(time.tv_sec * 1000 + time.tv_usec / 1000); // wartosci czasu przechowywane w strukturze time sa konwertowane na milisekundy; wiec time.tv_sec, czyli sekundy sa *1000, a time.tv_usec sa /1000

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   threads.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mrechuli <mrechuli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/24 18:40:54 by mrechuli          #+#    #+#             */
+/*   Updated: 2024/06/24 18:40:55 by mrechuli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 // Funkcja dead_loop ma na celu sprawdzenie, czy wątek filozofa powinien zakończyć swoje działanie.
@@ -49,7 +61,7 @@ int	thread_create(t_program *program, pthread_mutex_t *forks)
 	pthread_t	observer; // to jest dodatkowy watek, ktory monitoruje prace filozofow
 	int			x;
 
-	if(pthread_create((&observer, NULL, &monitor, program->philos) != 0)) // pthread_create tworzy watek obserwatora, ktory bedzie wykonywal funkcje "monitor" i przekaze ja jako argument "program->philos". Jesli utworzy go z sukcesem to zwraca 0. W kazdym innym przypadku jest blad.
+	if(pthread_create(&observer, NULL, &monitor, program->philos) != 0) // pthread_create tworzy watek obserwatora, ktory bedzie wykonywal funkcje "monitor" i przekaze ja jako argument "program->philos". Jesli utworzy go z sukcesem to zwraca 0. W kazdym innym przypadku jest blad.
 		destroy_all("Thread creation error", program, forks); // Wiec jesli funkcja zwraca cos innego niz 1 to jest to blad i "niszcze" wszystko.
 	x = 0;
 	while(x < program->philos[0].num_of_philos) // petla wykonuje sie dopoki x jest mniejsze od ilosci filozofow (ta informacja jest przechowywana w philos[0].num_of_philos, czyli na pierwszym miejscu tablicy philos[0].num_of_philos)
@@ -63,7 +75,7 @@ int	thread_create(t_program *program, pthread_mutex_t *forks)
 		destroy_all("Thread join error", program, forks); // Wiec jesli funkcja zwraca cos innego niz 1 to jest to blad i "niszcze" wszystko.
 	while(x < program->philos[0].num_of_philos)  // petla wykonuje sie dopoki x jest mniejsze od ilosci filozofow
 	{
-		if(pthread_join(&program->philos[x].thread, NULL) != 0) // oczekiwanie na ZAKONCZENIE watku dla kazdego filozofa. Funkcja pthread_join blokuje bieazy watek do momentu zakonczenia watku o identyfikatorze "thread"
+		if(pthread_join(program->philos[x].thread, NULL) != 0) // oczekiwanie na ZAKONCZENIE watku dla kazdego filozofa. Funkcja pthread_join blokuje bieazy watek do momentu zakonczenia watku o identyfikatorze "thread"
 			destroy_all("Thread join error", program, forks);
 		x++;
 	}

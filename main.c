@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mrechuli <mrechuli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/24 18:40:20 by mrechuli          #+#    #+#             */
+/*   Updated: 2024/06/24 18:40:22 by mrechuli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 // sprawdzam czy wprowadzone dane sa liczbami, jesli nie to zwracam blad (1)
@@ -23,7 +35,7 @@ int	ft_isnumber(char *arg)
 
 int	check_valid_args(char *argv[])
 {
-	if(ft_atol(argv[1]) > PHILO_MAX || ft_atol(argv[1]) <= 0 || ft_isnumber(argv[1]) == 1) // sprawdza czy ilosc filozofow jest OK
+	if((ft_atol(argv[1]) > PHILO_MAX) || (ft_atol(argv[1]) <= 0) || (ft_isnumber(argv[1]) == 1)) // sprawdza czy ilosc filozofow jest OK
 		return(write(2, "Invalid philosophers number\n", 29), 1);
 	if(ft_atol(argv[2]) <= 0 || ft_isnumber(argv[2]) == 1)
 		return(write(2, "Invalid time to die\n", 21), 1);
